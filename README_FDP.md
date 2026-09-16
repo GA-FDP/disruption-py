@@ -20,7 +20,7 @@ environment file. `disruption_py/` is untouched.
 ## 1. Install
 
 ```bash
-git clone -b sammuli/fdp-origin-config https://github.com/sammuli/disruption-py.git
+git clone -b sammuli/fdp-origin-config https://github.com/GA-FDP/disruption-py.git
 cd disruption-py
 
 mamba env create -f environment.yml     # or: conda env create -f environment.yml

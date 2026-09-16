@@ -30,7 +30,7 @@ dependencies:
   - pip:
       # Swap for the upstream repo once this is merged, or use `pip install -e .`
       # if you have the repo checked out.
-      - disruption-py @ git+https://github.com/sammuli/disruption-py@sammuli/fdp-origin-config
+      - disruption-py @ git+https://github.com/GA-FDP/disruption-py@sammuli/fdp-origin-config
 
 # For examples/fdp_disruption_plots.py only, add:  mamba install matplotlib
 # (numpy/pandas/xarray/scipy/netCDF4 all arrive with disruption-py via pip.)
