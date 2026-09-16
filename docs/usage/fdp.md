@@ -82,18 +82,26 @@ python your_script.py
 To set it per script instead of globally, pass the connection string directly:
 
 ```python
+from disruption_py.core.utils.shared_instance import SharedInstance
 from disruption_py.inout.mds import ProcessMDSConnection
 
 FDP_D3D = "fdp://fdp-d3d-origin.nationalresearchplatform.org:8443/mdsip"
 
 def fdp_connection():
-    return ProcessMDSConnection(FDP_D3D)
+    return SharedInstance(ProcessMDSConnection).get_instance(FDP_D3D)
 
 get_shots_data(..., connection_initializer=fdp_connection)
 ```
 
 `connection_initializer` must be picklable for `num_processes > 1`, so use a
 module-level function rather than a lambda.
+
+disruption-py calls `connection_initializer` once per shot, so wrap the
+connection in `SharedInstance` as above. It keeps one connection per worker
+process. Returning a bare `ProcessMDSConnection(FDP_D3D)` opens a new mdsip
+session for every shot, and on a few hundred shots the origin starts refusing
+connections with `HTTP 503: too many open mdsip sessions`. The global
+`user.toml` setting above already reuses connections this way.
 
 The URL is just the device's origin host and port under the `fdp://` scheme. If
 you have the `fdp` package installed and would rather not hard-code it, derive

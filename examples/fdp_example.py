@@ -37,6 +37,7 @@ import argparse
 
 import numpy as np
 
+from disruption_py.core.utils.shared_instance import SharedInstance
 from disruption_py.inout.mds import ProcessMDSConnection
 
 # The FDP origin's mdsip relay speaks the ordinary MDSplus thin-client protocol,
@@ -55,7 +56,12 @@ def fdp_connection():
     #     origin = catalog["d3d"].schema.origin_server   # root://host:port
     #     url = "fdp://" + origin.split("://", 1)[-1] + "/mdsip"
     # It is not a dependency of this example.
-    return ProcessMDSConnection(FDP_D3D)
+    #
+    # disruption-py calls connection_initializer once per shot. SharedInstance
+    # keeps one connection per worker process (as the default connection path
+    # does); a bare ProcessMDSConnection(...) would open a new mdsip session for
+    # every shot and exhaust the origin's session limit on large shot lists.
+    return SharedInstance(ProcessMDSConnection).get_instance(FDP_D3D)
 
 from disruption_py.inout.sql import DummyDatabase
 from disruption_py.machine.tokamak import Tokamak
